@@ -28,11 +28,11 @@ PImage[] img = new PImage[numOfImages];
 PFont f;
 
 void setup() {
-  size(1306, 1160, JAVA2D);
-  
-   book = new Book(this, JAVA2D);
+  size(floor(1306/(1.5)), floor(1160/(1.5)), JAVA2D);
+
+  book = new Book(this, JAVA2D);
   //Font Setup
-  fontSize=floor(random(minFontSize,maxFontSize));
+  fontSize=floor(random(minFontSize, maxFontSize));
   f = createFont("HelveticaNeue-CondensedBold", fontSize);
   textFont(f);
 
@@ -57,7 +57,6 @@ void setup() {
 }
 
 void draw() {
-  book.stepAndDraw();
 }
 
 //Create a function that takes a Sentence and 
@@ -66,11 +65,11 @@ void draw() {
 
 
 void keyPressed() {
-    String randomEntry = entries[floor(random(1,56))].presentEvent();
-    background(background);
-    getImages(numOfImages, getTokens(randomEntry));
-    randomTextPlace(randomEntry);
-    
+  String randomEntry = entries[floor(random(1, 56))].presentEvent();
+  background(background);
+  getImages(numOfImages, getTokens(randomEntry));
+  randomTextPlace(randomEntry);
+    book.stepAndDraw();
 }
 
 String getImgUrl(String search) {
@@ -78,7 +77,15 @@ String getImgUrl(String search) {
   int randomSelect = floor(random(1, 30));
   url = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q="+search+ "&start="+(randomSelect)+"&as_filetype=jpg"+"&imgsz=medium"; //ift:jpg,isz:m";
   response = loadJSONObject(url);
-  response = response.getJSONObject("responseData");
+
+  try { 
+    response = response.getJSONObject("responseData");
+  }
+  catch(Exception e) {
+    String responseDetails = response.getString("responseDetails");
+    e.printStackTrace();
+    return null;
+  }
   results = response.getJSONArray("results");
 
   JSONObject result = results.getJSONObject(0); 
@@ -88,10 +95,14 @@ String getImgUrl(String search) {
 }
 
 void imageCreate(int index, String searchTerm) {
+  String url = getImgUrl(searchTerm);
+  
+  if(url != null){
   img[index] = loadImage(getImgUrl(searchTerm), "jpg");
   if (img[index]==null) {
     imageCreate(index, searchTerm);
-  }
+   }
+}
 }
 
 void getImages(int numOfImages, String[] terms) {
@@ -104,18 +115,18 @@ void getImages(int numOfImages, String[] terms) {
       imageCreate(i, terms[i]);
     }
   }
-   for (int i = 0; i < numOfImages; i++) {
+  for (int i = 0; i < numOfImages; i++) {
     if (img[i] != null) {
       randPos(img[i]);
     }
   }
 }
 
-void randPos(PImage img){
+void randPos(PImage img) {
   image(img, floor(random(0, width)), floor(random(1, height)));
 }
 
-void randPosSize(PImage img){
+void randPosSize(PImage img) {
   image(img, floor(random(0, width)), floor(random(1, height)), floor(random(1, width)), floor(random(1, height)));
 }
 
@@ -162,12 +173,12 @@ String[] getTokens(String text) {
   return tokens;
 }
 
-boolean coinFlip(){
-  
+boolean coinFlip() {
+
   boolean f = false;
-  if(random(100)>50){
+  if (random(100)>50) {
     f = true;
   }
   return f;
-  
 }
+
