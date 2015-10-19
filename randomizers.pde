@@ -2,7 +2,7 @@ void randomTextPlace(String text) {
   int x = floor(random(width/2));
   int y = floor(random(height/6+fontSize, height/2));
   println(y);
-  int lineLength = floor((width-x)/(fontSize/2)); 
+  int lineLength = max(2, floor((width-x)/(fontSize/2))); 
   book.setLineSpacing(floor(map(fontSize, minFontSize, maxFontSize, 0, -(fontSize/2))));
 
   /* 
@@ -41,15 +41,24 @@ void randomTextPlace(String text) {
    break;
    }
    */
-   
+
   fill(randomColor());
   stroke(randomColor());
 
-  if (coinFlip()) {
+  if (coinFlip() && textOutline) {
     outlineText();
   } else {
     strokeWeight(0);
   }
+
+  if (coinFlip() && blendModes) {
+    randomBlendMode();
+  } else {
+    blendMode(BLEND);
+  }
+
+
+
   book.clear();
   book.addText(text, x, y, lineLength);
 }
@@ -71,5 +80,20 @@ void dropShadowText(String text, int x, int y, int w, int h) {
 
 void outlineText() {
   strokeWeight(floor(random(15)));
+}
+
+void randomBlendMode() {
+  if (random(30)>20) {
+    if (random(30)>25) {
+      blendMode(MULTIPLY);
+    } else
+      blendMode(SCREEN);
+  } else {
+    if (random(30)>10) {
+      blendMode(LIGHTEST);
+    } else {
+      blendMode(EXCLUSION);
+    }
+  }
 }
 

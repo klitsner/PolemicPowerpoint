@@ -1,4 +1,5 @@
 import de.bezier.data.*;
+import processing.pdf.*;
 import rita.*;
 import net.nexttext.*;
 import net.nexttext.renderer.*;
@@ -6,17 +7,16 @@ import net.nexttext.renderer.*;
 Book book;
 Entry[] entries = new Entry[57];
 
-String tester = "its an elephant man eating his hand";
-
 //Adjustable Parameters
 int numOfImages = 15; 
 int maxFontSize = 150;
 int minFontSize = 100;
+boolean blendModes = true;
+boolean textOutline = true;
 
 //Randomized Parameters
 int background;
-int fontSize;
-
+int fontSize = floor(random(minFontSize, maxFontSize));
 
 //Global Variables
 JSONArray results; 
@@ -24,16 +24,18 @@ JSONObject response;
 String[] imgUrls;
 
 PImage template;
+PImage gradient;
 PImage[] img = new PImage[numOfImages];
 PFont f;
 
 void setup() {
-  size(floor(1306/(1.5)), floor(1160/(1.5)), JAVA2D);
+  size(1306, 1160, PDF, "PowerpointExport.pdf");
 
   book = new Book(this, JAVA2D);
   //Font Setup
-  fontSize=floor(random(minFontSize, maxFontSize));
-  f = createFont("HelveticaNeue-CondensedBold", fontSize);
+  setFont(fontSize);
+  
+  
   textFont(f);
 
   //Create array of entries from XLS sheet
@@ -42,6 +44,7 @@ void setup() {
   }
 
   //setup template background
+  gradient = loadImage("Gradient.png");
   template = loadImage("template.png");  
   image(template, 0, 0, width, height);
 
@@ -49,11 +52,7 @@ void setup() {
   imgUrls = new String[numOfImages];
 
   //randomized parameters, comment out to unrandomfy
-  if (random(1, 3)>2) {
-    background = 0;
-  } else {
-    background = 255;
-  }
+
 }
 
 void draw() {
@@ -65,11 +64,14 @@ void draw() {
 
 
 void keyPressed() {
+  colorMode(RGB);
   String randomEntry = entries[floor(random(1, 56))].presentEvent();
-  background(background);
+  changeBackground();
   getImages(numOfImages, getTokens(randomEntry));
   randomTextPlace(randomEntry);
-    book.stepAndDraw();
+  book.stepAndDraw();
+  PGraphicsPDF pdf = (PGraphicsPDF) g;  // Get the renderer
+  pdf.nextPage();  // Tell it to go to the next page
 }
 
 String getImgUrl(String search) {
@@ -182,3 +184,22 @@ boolean coinFlip() {
   return f;
 }
 
+void changeBackground(){
+    if (random(100)>50) {
+    background = 0;
+  } else {
+    background = 255;
+  }
+  background(background);
+}
+
+void setFont(int fontSize){
+    if(random(12)>3){
+    if(random(12)>6){
+  f = createFont("Oswald-Bold", fontSize);
+    }else
+  f = createFont("Oswald-Light", fontSize);
+  }else{
+  f = createFont("Oswald-Light", fontSize);
+  }
+}
