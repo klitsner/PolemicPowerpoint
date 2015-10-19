@@ -1,5 +1,4 @@
 import de.bezier.data.*;
-import processing.pdf.*;
 import rita.*;
 import net.nexttext.*;
 import net.nexttext.renderer.*;
@@ -22,6 +21,9 @@ int fontSize = floor(random(minFontSize, maxFontSize));
 JSONArray results; 
 JSONObject response;
 String[] imgUrls;
+boolean go = true;
+int maxTIFs = 5;
+int TIFs = 0;
 
 PImage template;
 PImage gradient;
@@ -29,13 +31,13 @@ PImage[] img = new PImage[numOfImages];
 PFont f;
 
 void setup() {
-  size(1306, 1160, PDF, "PowerpointExport.pdf");
+  size(1306, 1160, JAVA2D);
 
   book = new Book(this, JAVA2D);
   //Font Setup
   setFont(fontSize);
-  
-  
+
+
   textFont(f);
 
   //Create array of entries from XLS sheet
@@ -52,34 +54,42 @@ void setup() {
   imgUrls = new String[numOfImages];
 
   //randomized parameters, comment out to unrandomfy
-
 }
 
 void draw() {
+  if (second() % 8 == 0 && go) {
+    mainProcess();
+    go = false;
+  }
+  if (second() % 9 == 0) {
+    go = true;
+  }
 }
 
-//Create a function that takes a Sentence and 
-// 2) randomly chooses 3-5 of them to turn to clip art
-// 3) PImage img = loadImage("url to the image"); 
-
-
-void keyPressed() {
+void mainProcess() {
+  TIFs++;
   colorMode(RGB);
   String randomEntry = entries[floor(random(1, 56))].presentEvent();
   changeBackground();
   getImages(numOfImages, getTokens(randomEntry));
   randomTextPlace(randomEntry);
   book.stepAndDraw();
-  PGraphicsPDF pdf = (PGraphicsPDF) g;  // Get the renderer
-  pdf.nextPage();  // Tell it to go to the next page
+  saveFrame("output/frames####.tif");
+  if (TIFs == maxTIFs) {
+    exit();
+  }
 }
+//Create a function that takes a Sentence and 
+// 2) randomly chooses 3-5 of them to turn to clip art
+// 3) PImage img = loadImage("url to the image"); 
+
 
 String getImgUrl(String search) {
   String url;
   int randomSelect = floor(random(1, 30));
-  url = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q="+search+ "&start="+(randomSelect)+"&as_filetype=jpg"+"&imgsz=medium"; //ift:jpg,isz:m";
+  
+  url = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q="+search+ "&start="+(randomSelect)+"&as_filetype=jpg"+"&imgsz= "+randomImageSize() +"";
   response = loadJSONObject(url);
-
   try { 
     response = response.getJSONObject("responseData");
   }
@@ -98,13 +108,13 @@ String getImgUrl(String search) {
 
 void imageCreate(int index, String searchTerm) {
   String url = getImgUrl(searchTerm);
-  
-  if(url != null){
-  img[index] = loadImage(getImgUrl(searchTerm), "jpg");
-  if (img[index]==null) {
-    imageCreate(index, searchTerm);
-   }
-}
+
+  if (url != null) {
+    img[index] = loadImage(getImgUrl(searchTerm), "jpg");
+    if (img[index]==null) {
+      imageCreate(index, searchTerm);
+    }
+  }
 }
 
 void getImages(int numOfImages, String[] terms) {
@@ -176,7 +186,6 @@ String[] getTokens(String text) {
 }
 
 boolean coinFlip() {
-
   boolean f = false;
   if (random(100)>50) {
     f = true;
@@ -184,8 +193,8 @@ boolean coinFlip() {
   return f;
 }
 
-void changeBackground(){
-    if (random(100)>50) {
+void changeBackground() {
+  if (random(100)>50) {
     background = 0;
   } else {
     background = 255;
@@ -193,13 +202,24 @@ void changeBackground(){
   background(background);
 }
 
-void setFont(int fontSize){
-    if(random(12)>3){
-    if(random(12)>6){
-  f = createFont("Oswald-Bold", fontSize);
-    }else
-  f = createFont("Oswald-Light", fontSize);
-  }else{
-  f = createFont("Oswald-Light", fontSize);
+void setFont(int fontSize) {
+  if (random(12)>3) {
+    if (random(12)>6) {
+      f = createFont("Oswald-Bold", fontSize);
+    } else
+      f = createFont("Oswald-Light", fontSize);
+  } else {
+    f = createFont("Oswald-Light", fontSize);
+  }
+}
+
+String randomImageSize(){
+  if (random(12)>3) {
+    if (random(12)>6) {
+      return "xxlarge";
+    } else
+      return "huge";
+  } else {
+    return "medium";
   }
 }

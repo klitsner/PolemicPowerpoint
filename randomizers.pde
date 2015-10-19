@@ -4,44 +4,6 @@ void randomTextPlace(String text) {
   println(y);
   int lineLength = max(2, floor((width-x)/(fontSize/2))); 
   book.setLineSpacing(floor(map(fontSize, minFontSize, maxFontSize, 0, -(fontSize/2))));
-
-  /* 
-   int random = floor(random(0, 9));
-   
-   switch(random) {
-   case 1: 
-   textAlign(CENTER, TOP);
-   break;
-   case 2: 
-   textAlign(CENTER, BOTTOM);
-   break;
-   case 3: 
-   textAlign(CENTER, CENTER);
-   break;
-   case 4: 
-   textAlign(RIGHT, TOP);
-   break;
-   case 5: 
-   textAlign(RIGHT, BOTTOM);
-   break;
-   case 6: 
-   textAlign(RIGHT, CENTER);
-   break;
-   case 7: 
-   textAlign(LEFT, BOTTOM);
-   break;
-   case 8: 
-   textAlign(RIGHT, BOTTOM);
-   break;
-   case 9: 
-   textAlign(CENTER, BOTTOM);
-   break;
-   default : 
-   textAlign(CENTER, CENTER);
-   break;
-   }
-   */
-
   fill(randomColor());
   stroke(randomColor());
 
@@ -52,17 +14,15 @@ void randomTextPlace(String text) {
   }
 
   if (coinFlip() && blendModes) {
+    println("HEY");
     randomBlendMode();
   } else {
     blendMode(BLEND);
   }
 
-
-
   book.clear();
   book.addText(text, x, y, lineLength);
 }
-
 
 color randomColor() {
   colorMode(HSB, 16, 10, 10);
