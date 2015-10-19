@@ -1,15 +1,22 @@
 import de.bezier.data.*;
 import rita.*;
+import net.nexttext.*;
+import net.nexttext.renderer.*;
 
+Book book;
 Entry[] entries = new Entry[57];
 
 String tester = "its an elephant man eating his hand";
 
 //Adjustable Parameters
 int numOfImages = 15; 
+int maxFontSize = 150;
+int minFontSize = 100;
 
 //Randomized Parameters
 int background;
+int fontSize;
+
 
 //Global Variables
 JSONArray results; 
@@ -18,14 +25,18 @@ String[] imgUrls;
 
 PImage template;
 PImage[] img = new PImage[numOfImages];
-
-String imgUrl;
+PFont f;
 
 void setup() {
-  //size(1306, 1160, P2D);
-  size(800,600,P2D);
+  size(1306, 1160, JAVA2D);
+  
+   book = new Book(this, JAVA2D);
+  //Font Setup
+  fontSize=floor(random(minFontSize,maxFontSize));
+  f = createFont("HelveticaNeue-CondensedBold", fontSize);
+  textFont(f);
 
-  //Create array of entry objects
+  //Create array of entries from XLS sheet
   for (int i = 1; i < 57; i++) {
     entries[i] = new Entry(i);
   }
@@ -34,21 +45,19 @@ void setup() {
   template = loadImage("template.png");  
   image(template, 0, 0, width, height);
 
+  //create imgUrls array
   imgUrls = new String[numOfImages];
 
-  //randomized parameters, comment out to un randomfy
+  //randomized parameters, comment out to unrandomfy
   if (random(1, 3)>2) {
     background = 0;
   } else {
     background = 255;
   }
-  println(getTokens(tester));
-  //remember to check if an array index points to null
-
-  //background(background);
 }
 
 void draw() {
+  book.stepAndDraw();
 }
 
 //Create a function that takes a Sentence and 
@@ -57,13 +66,16 @@ void draw() {
 
 
 void keyPressed() {
-  
-    getImages(numOfImages, getTokens(tester));
+    String randomEntry = entries[floor(random(1,56))].presentEvent();
+    background(background);
+    getImages(numOfImages, getTokens(randomEntry));
+    randomTextPlace(randomEntry);
+    
 }
 
 String getImgUrl(String search) {
   String url;
-  int randomSelect = floor(random(1, 20));
+  int randomSelect = floor(random(1, 30));
   url = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q="+search+ "&start="+(randomSelect)+"&as_filetype=jpg"+"&imgsz=medium"; //ift:jpg,isz:m";
   response = loadJSONObject(url);
   response = response.getJSONObject("responseData");
@@ -150,3 +162,12 @@ String[] getTokens(String text) {
   return tokens;
 }
 
+boolean coinFlip(){
+  
+  boolean f = false;
+  if(random(100)>50){
+    f = true;
+  }
+  return f;
+  
+}
