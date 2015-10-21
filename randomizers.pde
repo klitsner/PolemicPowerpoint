@@ -1,22 +1,4 @@
-void TextPlace(String text, int x, int y, int lineLength, int lineSpacing) {
 
-  book.setLineSpacing(lineSpacing);
-  
-  fill(randomColor());
-  stroke(randomColor());
-
-  randomTextAttributes(text);
-
-  book.clear();
-  try{
-  book.addText(text, x, y, lineLength);
-  }catch(Exception e){
-  book.addText(text, x, y, lineLength+2);
-  }
-  
-  //draws text to page
-    book.stepAndDraw();
-}
 
 color randomColor() {
   colorMode(HSB, 16, 100, 100);
@@ -57,7 +39,7 @@ void randomTextAttributes(String text){
   } else {
     blendMode(BLEND);
   }
-  s
+  
     if (coinFlip() && allUpperCase) {
     text = text.toUpperCase();
   } 

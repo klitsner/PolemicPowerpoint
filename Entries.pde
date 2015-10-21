@@ -1,7 +1,6 @@
 //This class is used to create objects containing data from the XLS sheet
 
 class Entry {
-  
   String year;
   int row;
   int numOfTokens;
@@ -43,7 +42,11 @@ class Entry {
   }
   
   String reference(){
+  try{
     return reader.getString( row, 4 );
+  }catch(Exception e){
+    return null;
+  }
   }
   
   String getFullSentence(){
