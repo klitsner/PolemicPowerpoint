@@ -7,15 +7,13 @@ Book book;
 Entry[] entries = new Entry[57];
 
 //Adjustable Parameters
-int numOfImages = 15; 
-int maxFontSize = 150;
-int minFontSize = 100;
+int numOfImages = 10; 
 boolean blendModes = true;
 boolean textOutline = true;
+boolean allUpperCase = true;
 
 //Randomized Parameters
 int background;
-int fontSize = floor(random(minFontSize, maxFontSize));
 
 //Global Variables
 JSONArray results; 
@@ -32,13 +30,7 @@ PFont f;
 
 void setup() {
   size(1306, 1160, JAVA2D);
-
   book = new Book(this, JAVA2D);
-  //Font Setup
-  setFont(fontSize);
-
-
-  textFont(f);
 
   //Create array of entries from XLS sheet
   for (int i = 1; i < 57; i++) {
@@ -46,7 +38,7 @@ void setup() {
   }
 
   //setup template background
-  gradient = loadImage("Gradient.png");
+  // gradient = loadImage("Gradient.png");
   template = loadImage("template.png");  
   image(template, 0, 0, width, height);
 
@@ -54,41 +46,47 @@ void setup() {
   imgUrls = new String[numOfImages];
 
   //randomized parameters, comment out to unrandomfy
+  mainProcess();
 }
 
 void draw() {
-  if (second() % 8 == 0 && go) {
+  //run process every 7 seconds (giving time to load)
+  if (second() % 7 == 0 && go) {
     mainProcess();
     go = false;
   }
-  if (second() % 9 == 0) {
+  if (second() % 8 == 0) {
     go = true;
   }
 }
 
 void mainProcess() {
   TIFs++;
-  colorMode(RGB);
+
+  //Right now pulling only form (present event)
   String randomEntry = entries[floor(random(1, 56))].presentEvent();
+
+
   changeBackground();
+
+  //get and put images on page
   getImages(numOfImages, getTokens(randomEntry));
-  randomTextPlace(randomEntry);
-  book.stepAndDraw();
+
+  SetType(randomEntry);
+
+  //output frame
   saveFrame("output/frames####.tif");
   if (TIFs == maxTIFs) {
     exit();
   }
 }
-//Create a function that takes a Sentence and 
-// 2) randomly chooses 3-5 of them to turn to clip art
-// 3) PImage img = loadImage("url to the image"); 
 
 
 String getImgUrl(String search) {
   String url;
   int randomSelect = floor(random(1, 30));
-  
-  url = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q="+search+ "&start="+(randomSelect)+"&as_filetype=jpg"+"&imgsz= "+randomImageSize() +"";
+
+  url = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q="+search+ "&start="+(randomSelect)+"&as_filetype=jpg"+"&imgsz="+randomImageSize()+"";
   response = loadJSONObject(url);
   try { 
     response = response.getJSONObject("responseData");
@@ -118,6 +116,7 @@ void imageCreate(int index, String searchTerm) {
 }
 
 void getImages(int numOfImages, String[] terms) {
+  //The number of images is limited to the number of significant terms (nouns, verbs) found in entry, even if numOfImages is higher
   if (numOfImages>terms.length) {
     for (int i = 0; i<terms.length; i++) {
       imageCreate(i, terms[i]);
@@ -199,7 +198,8 @@ void changeBackground() {
   } else {
     background = 255;
   }
-  background(background);
+  blendMode(BLEND);
+  background(background, 255);
 }
 
 void setFont(int fontSize) {
@@ -213,7 +213,7 @@ void setFont(int fontSize) {
   }
 }
 
-String randomImageSize(){
+String randomImageSize() {
   if (random(12)>3) {
     if (random(12)>6) {
       return "xxlarge";
@@ -223,3 +223,39 @@ String randomImageSize(){
     return "medium";
   }
 }
+
+void SetType(String text) {
+  int charCount = text.length();
+  
+ 
+  //use character count to dictate max font size
+  int maxFontSize = floor(map(charCount,20,100,200,100));
+  int minFontSize = 80;
+  int maxTextLines = 3;
+  
+  
+  int fontSize = floor(random(minFontSize, maxFontSize));
+  
+  setFont(fontSize);
+  textFont(f);
+  
+  int charWidth = floor(textWidth("a"));
+  int textWidth = floor(textWidth(text));
+  
+  int maxX = (width-textWidth/3)-charWidth;  
+  int x = floor(random(0,maxX));
+  
+  //int maxY =  
+  //int y = floor(random(0,maxY));
+    int y = floor(random(height/6+fontSize, height/2));
+    
+    int minLineLength = charCount/ maxTextLines;
+    int maxLineLength = floor((width-x)/(charWidth*1.1));
+  
+    int lineLength = floor(random(minLineLength,maxLineLength));
+    println(lineLength);
+    int lineSpacing = floor(map(fontSize, minFontSize, maxFontSize, 0, -(fontSize/2)));
+    
+    TextPlace(text, x, y, lineLength, lineSpacing);
+}
+
