@@ -17,7 +17,7 @@ boolean extended = false; // may be too much text
 //Image
 int numOfImages = 5; 
 boolean resizeImages = true;
-boolean drawImages = true;
+boolean drawImages = true; //turn on and off image drawing
 
 //Text
 boolean blackWhiteText = true; // true: will allow only black or white fonts;
