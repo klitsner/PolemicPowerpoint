@@ -31,7 +31,7 @@ void SetType(String text) {
 
   //int maxY =  
   //int y = floor(random(0,maxY));
-  int y = floor(random(typeYLimit+yearSize, typeYLimit+height/3));
+  int y = floor(random(typeYLimit+yearSize, typeYLimit+height/5));
 
   int minLineLength = charCount/ maxTextLines;
   int maxLineLength = floor((width-x)/(charWidth*1.1));
@@ -114,7 +114,6 @@ void TextPlace(String text, int x, int y, int lineLength, int lineSpacing) {
   }
 
   //draws text to page
-  book.stepAndDraw();
 }
 
 void YearPlace(String year, int x, int y, int lineLength, int lineSpacing) {
