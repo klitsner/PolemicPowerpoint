@@ -125,7 +125,7 @@ void mainProcess() {
   saveFrame("output/frames####.png");
   book.clear();
   numOfReferences = 0;
-  if (PNGs == maxPNGs) {
+  if (pngs == maxPNGs) {
     wait(5000);
     exit();
   }
