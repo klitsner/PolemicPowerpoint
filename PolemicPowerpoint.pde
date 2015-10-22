@@ -8,15 +8,29 @@ Entry[] entries = new Entry[57];
 
 //Adjustable Parameters
 int numOfImages = 10; 
-boolean blendModes = true;
-boolean textOutline = true;
-boolean allUpperCase = true;
+boolean blackWhiteText = true; // true: will allow only black or white fonts;
+boolean textOutline = true; // allows outlined text
+boolean blackWhiteOutline = true;
+boolean allUpperCase = true; // sets all type to uppercase
+
+boolean blendModes = true; // random application of blending modes
+boolean circlesAndSquares = true; // generates box or circle outline around text
+
+boolean randomFonts = true; // Will select from the 3 font strings below if true
+String font1 = "Oswald-Regular"; // if randomFonts set to false, only this font will be used.
+String font2 = "Oswald-Light";
+String font3 = "Oswald-Bold";
+String refFont = "Oswald-Light";
+
+
+
 
 //Randomized Parameters
 int background;
 
 //Global Variables
-int sizeLimit;
+int fontSizeLimit;
+int typeYLimit;
 JSONArray results; 
 JSONObject response;
 String[] imgUrls;
@@ -26,8 +40,6 @@ int PNGs = 0;
 String [] references = new String [numOfImages+1];
 int numOfReferences = 1;
 
-PImage template;
-PImage gradient;
 PImage[] img = new PImage[numOfImages];
 PFont f;
 PFont referenceFont;
@@ -41,12 +53,10 @@ void setup() {
     entries[i] = new Entry(i);
   }
 
-   referenceFont = createFont("Oswald-Light", 18);
+   referenceFont = createFont(refFont, 18);
 
   //setup template background
   // gradient = loadImage("Gradient.png");
-  template = loadImage("template.png");  
-  image(template, 0, 0, width, height);
 
   //create imgUrls array
   imgUrls = new String[numOfImages];
@@ -81,9 +91,8 @@ void mainProcess() {
 
   //get and put images on page
   //getImages(numOfImages, getTokens(selectedEntry));
-  
-  SetType(selectedEntry);
   SetYear(selectedYear);
+  SetType(selectedEntry);
   addReference(references, numOfReferences);
   //output frame
   saveFrame("output/frames####.png");
@@ -121,7 +130,7 @@ void changeBackground() {
     background = 255;
   }
   blendMode(BLEND);
-  background(background, 255);
+  background(background);
 }
 
 
