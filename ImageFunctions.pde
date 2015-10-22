@@ -29,8 +29,7 @@ void getImages(int numOfImages, String[] terms) {
 
 void imageCreate(int index, String searchTerm) {
   //pauses 
-  while (millis ()%2000!=0) {
-  }
+wait(5000);
 println("passed");
   String url = getImgUrl(searchTerm);
   if (url != null) {
@@ -66,3 +65,11 @@ String getImgUrl(String search) {
   return linkstring;
 }
 
+void wait(int time){
+  /*
+  //runs an empty loop for specified time, halting the program
+  int curr = millis();
+    while ((millis()-curr)%time!=0) {
+  }
+  */
+}

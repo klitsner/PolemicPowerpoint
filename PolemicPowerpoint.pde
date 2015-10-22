@@ -9,32 +9,32 @@ Entry[] entries = new Entry[57];
 /////*****Adjustable Parameters*****///////
 
 //EntryType
-boolean present = true; //switch to false when making another true
+boolean present = true;
 boolean future = false;
 boolean modal = false;
 boolean extended = false; // may be too much text
 
 //Image
-int numOfImages = 10; 
+int numOfImages = 5; 
 boolean resizeImages = true;
+boolean drawImages = true;
 
 //Text
-boolean blackWhiteText = false; // true: will allow only black or white fonts;
-boolean blackWhiteOutline = false;
+boolean blackWhiteText = true; // true: will allow only black or white fonts;
+boolean blackWhiteOutline = true;
 boolean textOutline = true; // allows outlined text
 boolean allUpperCase = true; // sets all type to uppercase
 
 //Draw
-boolean blendModes = true; // random application of blending modes
-boolean circlesAndSquares = true; // generates box or circle outline around text
+boolean blendModes = false; // random application of blending modes
+boolean circlesAndSquares = false; // generates box or circle outline around text
 
 //Fonts
-boolean randomFonts = true; // Will select from the 3 font strings below if true
-String font1 = "Oswald-Regular"; // if randomFonts set to false, only this font will be used.
+boolean randomFonts = false; // Will select from the 3 font strings below if true
+String font1 = "Avenir Next Condensed"; // if randomFonts set to false, only this font will be used.
 String font2 = "Oswald-Light";
 String font3 = "Oswald-Bold";
-String refFont = "Oswald-Light";
-
+String refFont = "Avenir Next Condensed";
 /////*********//////*****///////
 
 
@@ -50,7 +50,7 @@ JSONArray results;
 JSONObject response;
 String[] imgUrls;
 boolean go = true;
-int maxPNGs = 56;
+int maxPNGs = 5;
 int PNGs = 0;
 String [] references = new String [numOfImages+1];
 int numOfReferences = 1;
@@ -89,7 +89,6 @@ void draw() {
 
 void mainProcess() {
   PNGs++;
-
   //Right now pulling only form (present event)
   //int randomRow = floor(random(1,56));
   
@@ -116,15 +115,23 @@ void mainProcess() {
   changeBackground();
 
   //get and put images on page
+  if(drawImages){
   getImages(numOfImages, getTokens(selectedEntry));
+  }
+  
   SetYear(selectedYear);
+  book.stepAndDraw();
+  
   SetType(selectedEntry);
+  book.stepAndDraw();
+  
   addReference(references, numOfReferences);
   //output frame
   saveFrame("output/frames####.png");
   book.clear();
   numOfReferences = 0;
   if (PNGs == maxPNGs) {
+    wait(5000);
     exit();
   }
 }
@@ -141,10 +148,6 @@ void randPos(PImage img) {
 
 void randPosSize(PImage img) {
   image(img, floor(random(0, width)), floor(random(1, height)), floor(random(1, width)), floor(random(1, height)));
-}
-
-void typeEmphasis(String input) {
-  //  RiTa.getPosTags(input);
 }
 
 boolean coinFlip() {
