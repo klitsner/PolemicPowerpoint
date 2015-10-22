@@ -12,12 +12,10 @@ void setFont(int fontSize) {
 void SetType(String text) {
   int charCount = text.length();
 
-
   //use character count to dictate max font size
   int maxFontSize = floor(map(charCount, 20, 100, 200, 100));
   int minFontSize = 80;
   int maxTextLines = 3;
-
 
   int fontSize = floor(random(minFontSize, maxFontSize));
 
@@ -40,7 +38,7 @@ void SetType(String text) {
   int lineLength = floor(random(minLineLength, maxLineLength));
   println(lineLength);
   int lineSpacing = floor(map(fontSize, minFontSize, maxFontSize, 0, -(fontSize/2)));
-
+  
   TextPlace(text, x, y, lineLength, lineSpacing);
 }
 
@@ -77,14 +75,19 @@ void TextPlace(String text, int x, int y, int lineLength, int lineSpacing) {
   book.setLineSpacing(lineSpacing);
   color textFill = randomColor();
   color recStroke = textFill;
+  
+  int textHeight = floor(0.8*(textAscent() + textDescent()));
 
   int margin = floor(textWidth("A")/2);
   stroke(recStroke);
+  strokeWeight(5);
   //try no fill
   noFill();
-  int recWidth = floor(lineLength*textWidth("A")-margin);
+  int recWidth = floor(lineLength*textWidth("A")-margin*2);
   int recHeight = lineSpacing*30;
-  rect(x-margin, y-margin*2, recWidth, 100);
+  //try randomizing where this rectangle goes
+  rect(x-margin, y-textHeight, recWidth, textHeight*2);
+  print("coordinates: ",x+" ",y+" ",recWidth+" " );
 
   fill(textFill);
   stroke(randomColor());
@@ -131,15 +134,15 @@ void addReference(String [] reference, int number) {
     start = 0;
   }
   int i = start;
-  int y = height - (number * 10) - 20;
+  int y = height - (number * 18) - 20;
 
   textFont(referenceFont);
   colorMode(RGB);
   fill(255, 0, 0);
-  text("REFERENCES:", 10, y-18);
+  text("REFERENCES:", 18, y-18);
 
   while (reference[i] != null) {
-    text(reference[i], 10, y+(i*14));
+    text(reference[i], 18, y+(i*28));
     i++;
   }
 }

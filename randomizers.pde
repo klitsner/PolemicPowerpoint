@@ -1,10 +1,7 @@
 
 
 color randomColor() {
-  colorMode(HSB, 16, 100, 100);
-  int col = floor(random(16));
-
-  return color(col, 100, 100);
+  return color(random(0,255),random(0,255),random(0,255));
 }
 
 
@@ -16,13 +13,17 @@ void randomBlendMode() {
   if (random(30)>20) {
     if (random(30)>25) {
       blendMode(MULTIPLY);
+      println("bledning");
     } else
       blendMode(SCREEN);
+            println("bledning");
   } else {
     if (random(30)>10) {
       blendMode(LIGHTEST);
+            println("bledning");
     } else {
       blendMode(EXCLUSION);
+            println("bledning");
     }
   }
 }

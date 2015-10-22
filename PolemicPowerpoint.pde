@@ -16,12 +16,13 @@ boolean allUpperCase = true;
 int background;
 
 //Global Variables
+int sizeLimit;
 JSONArray results; 
 JSONObject response;
 String[] imgUrls;
 boolean go = true;
-int maxTIFs = 5;
-int TIFs = 0;
+int maxPNGs = 5;
+int PNGs = 0;
 String [] references = new String [numOfImages+1];
 int numOfReferences = 1;
 
@@ -32,7 +33,7 @@ PFont f;
 PFont referenceFont;
 
 void setup() {
-  size(1306, 1160, JAVA2D);
+  size(3072, 2732, JAVA2D);
   book = new Book(this, JAVA2D);
 
   //Create array of entries from XLS sheet
@@ -40,7 +41,7 @@ void setup() {
     entries[i] = new Entry(i);
   }
 
-   referenceFont = createFont("Oswald-Light", 12);
+   referenceFont = createFont("Oswald-Light", 18);
 
   //setup template background
   // gradient = loadImage("Gradient.png");
@@ -66,7 +67,7 @@ void draw() {
 }
 
 void mainProcess() {
-  TIFs++;
+  PNGs++;
 
   //Right now pulling only form (present event)
   int randomRow = floor(random(1,56));
@@ -79,16 +80,16 @@ void mainProcess() {
   changeBackground();
 
   //get and put images on page
-  getImages(numOfImages, getTokens(selectedEntry));
+  //getImages(numOfImages, getTokens(selectedEntry));
   
-  SetYear(selectedYear);
   SetType(selectedEntry);
+  SetYear(selectedYear);
   addReference(references, numOfReferences);
   //output frame
-  saveFrame("output/frames####.tif");
+  saveFrame("output/frames####.png");
   book.clear();
   numOfReferences = 0;
-  if (TIFs == maxTIFs) {
+  if (PNGs == maxPNGs) {
     exit();
   }
 }
