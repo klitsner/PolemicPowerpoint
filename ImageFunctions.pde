@@ -1,25 +1,22 @@
 String randomImageSize() {
-  if (random(12)>3) {
-    if (random(12)>6) {
-      return "xxlarge";
-    } else
-      return "huge";
-  } else {
-    return "medium";
-  }
+  if (random(12)>6) {
+    return "xxlarge";
+  } else
+    return "huge";
 }
 
 void getImages(int numOfImages, String[] terms) {
+  
+  for(int i = 0; i<img.length; i++){
+   img[i] = null; 
+  }
+  
   //The number of images is limited to the number of significant terms (nouns, verbs) found in entry, even if numOfImages is higher
   if (numOfImages>terms.length) {
     for (int i = 0; i<terms.length; i++) {
-      println("went");
       imageCreate(i, terms[i]);
     }
-  } else {
-    for (int i = 0; i<numOfImages; i++) {
-    }
-  }
+  } 
   for (int i = 0; i < numOfImages; i++) {
     if (img[i] != null) {
       randPos(img[i]);
@@ -29,15 +26,13 @@ void getImages(int numOfImages, String[] terms) {
 
 void imageCreate(int index, String searchTerm) {
   //pauses 
-wait(5000);
-println("passed");
+  wait(5000);
   String url = getImgUrl(searchTerm);
   if (url != null) {
     img[index] = loadImage(getImgUrl(searchTerm), "jpg");
     references[index+1]=url;
     numOfReferences++;
   } else {
-
     imageCreate(index, searchTerm); // coment out if running slowly
   }
 }
@@ -65,11 +60,12 @@ String getImgUrl(String search) {
   return linkstring;
 }
 
-void wait(int time){
+void wait(int time) {
   /*
   //runs an empty loop for specified time, halting the program
-  int curr = millis();
-    while ((millis()-curr)%time!=0) {
-  }
-  */
+   int curr = millis();
+   while ((millis()-curr)%time!=0) {
+   }
+   */
 }
+
