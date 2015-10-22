@@ -29,6 +29,6 @@ String[] getTokens(String text) {
 
   String[] tokens = new String [numOfTokens];
   arrayCopy(allTokens, 0, tokens, 0, numOfTokens);
-
+  println(allTokens);
   return tokens;
 }

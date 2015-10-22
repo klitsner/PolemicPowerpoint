@@ -138,10 +138,10 @@ void YearPlace(String year, int x, int y, int lineLength, int lineSpacing) {
   randomTextAttributes(year);
 
   try {
-    book.addText(year, x, y, lineLength);
+    book.addText(year, x, y, lineLength+5);
   }
   catch(Exception e) {
-    book.addText(year, x, y, lineLength+2);
+    book.addText(year, x, y, lineLength+7);
   }
 }
 
@@ -154,15 +154,15 @@ void addReference(String [] reference, int number) {
     start = 0;
   }
   int i = start;
-  int y = height - (number * 28) - 30;
+  int y = height - (number * 34);
 
   textFont(referenceFont);
   colorMode(RGB);
   fill(255, 0, 0);
-  text("REFERENCES:", 18, y-18);
+  text("REFERENCES:", 18, y-24);
 
   while (reference[i] != null) {
-    text(reference[i], 18, y+(i*28));
+    text(reference[i], 18, y+(i*24));
     i++;
   }
 }

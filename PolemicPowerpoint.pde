@@ -37,8 +37,6 @@ String font3 = "Oswald-Bold";
 String refFont = "Avenir Next Condensed";
 /////*********//////*****///////
 
-
-
 //Randomized Parameters
 int background;
 
@@ -48,10 +46,9 @@ int typeYLimit;
 int yearSize;
 JSONArray results; 
 JSONObject response;
-String[] imgUrls;
 boolean go = true;
-int maxPNGs = 5;
-int PNGs = 0;
+int maxPNGs = 57;
+int pngs = 0;
 String [] references = new String [numOfImages+1];
 int numOfReferences = 1;
 
@@ -69,9 +66,6 @@ void setup() {
   }
    referenceFont = createFont(refFont, 18);
 
-  //create imgUrls array
-  imgUrls = new String[numOfImages];
-
   //randomized parameters, comment out to unrandomfy
   mainProcess();
 }
@@ -88,11 +82,11 @@ void draw() {
 }
 
 void mainProcess() {
-  PNGs++;
+  pngs++;
   //Right now pulling only form (present event)
   //int randomRow = floor(random(1,56));
   
-  int selectRow = PNGs;
+  int selectRow = pngs;
   
   String selectedEntry = "blank"; //wont run unless value is given
   if(present){
@@ -116,7 +110,7 @@ void mainProcess() {
 
   //get and put images on page
   if(drawImages){
-  getImages(numOfImages, getTokens(selectedEntry));
+    getImages(numOfImages, getTokens(selectedEntry));
   }
   
   SetYear(selectedYear);
@@ -127,6 +121,7 @@ void mainProcess() {
   
   addReference(references, numOfReferences);
   //output frame
+   wait(2000);
   saveFrame("output/frames####.png");
   book.clear();
   numOfReferences = 0;
@@ -140,9 +135,9 @@ void randPos(PImage img) {
   if(resizeImages){
     float scalar = random(2,5);
     println(scalar);
-    image(img, floor(random(0, width-(width/5))), floor(random(1, height-(height/5))),img.width, img.height );
+    image(img, floor(random(0, width-(width/5))), floor(random(1, height-(height/3))),img.width*scalar, img.height*scalar );
   }else{
-    image(img, floor(random(0, width-(width/5))), floor(random(1, height-(height/5))));
+    image(img, floor(random(0, width-(width/5))), floor(random(1, height-(height/3))));
   }
 }
 
