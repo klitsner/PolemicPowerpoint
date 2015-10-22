@@ -13,9 +13,10 @@ void SetType(String text) {
   int charCount = text.length();
 
   //use character count to dictate max font size
+  int maxTextLines = 3;
+
   int maxFontSize = fontSizeLimit;
   int minFontSize = fontSizeLimit-150;
-  int maxTextLines = 3;
 
   int fontSize = floor(random(minFontSize, maxFontSize));
 
@@ -30,7 +31,7 @@ void SetType(String text) {
 
   //int maxY =  
   //int y = floor(random(0,maxY));
-  int y = floor(random(typeYLimit, typeYLimit+300));
+  int y = floor(random(typeYLimit+yearSize, typeYLimit+height/3));
 
   int minLineLength = charCount/ maxTextLines;
   int maxLineLength = floor((width-x)/(charWidth*1.1));
@@ -46,7 +47,7 @@ void SetYear(String text) {
   int charCount = text.length()+4;
 
   //use character count to dictate max font size
-  int maxFontSize = floor(map(charCount, 10, 20, 400, 200));
+  int maxFontSize = floor(map(charCount, 10, 20, 400, 250));
   int minFontSize = 250;
   int maxTextLines = 3;
 
@@ -61,9 +62,11 @@ void SetYear(String text) {
   int textWidth = floor(textWidth(text));
 
   int maxX = (width-textWidth/3)-charWidth - 100;  
-  int x = floor(random(0, maxX));
+  int x = floor(random(20, min(maxX, width/2)));
 
-  int y = floor(random(height/5+fontSize, height/2));
+  int y = floor(random(height/5+fontSize, height/4));
+  yearSize = floor(textDescent()+textAscent());
+  println("yearSize: "+yearSize);
 
   int lineLength = floor((width-x)/(charWidth*1.1));
   int lineSpacing = floor(map(fontSize, minFontSize, maxFontSize, 0, -(fontSize/2)));
@@ -155,7 +158,7 @@ void addReference(String [] reference, int number) {
     start = 0;
   }
   int i = start;
-  int y = height - (number * 18) - 20;
+  int y = height - (number * 18) - 30;
 
   textFont(referenceFont);
   colorMode(RGB);
@@ -169,11 +172,11 @@ void addReference(String [] reference, int number) {
 }
 
 color textColor(){
-  color textFill;
+  color textFill = color(0,0,255);
     if(blackWhiteText){
-    if(background==255 && textOutline){
+    if(background==255 && textOutline || background == 0){
       textFill = color(255,255,255);
-    }else{
+    }else if(background == 255 || background == 0 && textOutline){
       textFill = color(0,0,0);
     }
   }else{

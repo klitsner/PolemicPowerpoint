@@ -13,14 +13,11 @@ void getImages(int numOfImages, String[] terms) {
   //The number of images is limited to the number of significant terms (nouns, verbs) found in entry, even if numOfImages is higher
   if (numOfImages>terms.length) {
     for (int i = 0; i<terms.length; i++) {
-println("first image");
+      println("went");
       imageCreate(i, terms[i]);
-
     }
   } else {
     for (int i = 0; i<numOfImages; i++) {
-      
-      //imageCreate(i, terms[i]);
     }
   }
   for (int i = 0; i < numOfImages; i++) {
@@ -31,17 +28,20 @@ println("first image");
 }
 
 void imageCreate(int index, String searchTerm) {
-
+  //pauses 
+  while (millis ()%2000!=0) {
+  }
+println("passed");
   String url = getImgUrl(searchTerm);
   if (url != null) {
     img[index] = loadImage(getImgUrl(searchTerm), "jpg");
     references[index+1]=url;
     numOfReferences++;
-    }else {
-      delay(100);
-      imageCreate(index, searchTerm); // coment out if running slowly
-    }
+  } else {
+
+    imageCreate(index, searchTerm); // coment out if running slowly
   }
+}
 
 
 String getImgUrl(String search) {
