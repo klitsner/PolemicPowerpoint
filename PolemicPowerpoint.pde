@@ -6,46 +6,68 @@ import net.nexttext.renderer.*;
 Book book;
 Entry[] entries = new Entry[57];
 
-//Adjustable Parameters
+/////*****Adjustable Parameters*****///////
+
+//EntryType
+boolean present = true; //switch to false when making another true
+boolean future = false;
+boolean modal = false;
+boolean extended = false; // may be too much text
+
+//Image
 int numOfImages = 10; 
-boolean blendModes = true;
-boolean textOutline = true;
-boolean allUpperCase = true;
+boolean resizeImages = true;
+
+//Text
+boolean blackWhiteText = false; // true: will allow only black or white fonts;
+boolean blackWhiteOutline = false;
+boolean textOutline = true; // allows outlined text
+boolean allUpperCase = true; // sets all type to uppercase
+
+//Draw
+boolean blendModes = true; // random application of blending modes
+boolean circlesAndSquares = true; // generates box or circle outline around text
+
+//Fonts
+boolean randomFonts = true; // Will select from the 3 font strings below if true
+String font1 = "Oswald-Regular"; // if randomFonts set to false, only this font will be used.
+String font2 = "Oswald-Light";
+String font3 = "Oswald-Bold";
+String refFont = "Oswald-Light";
+
+/////*********//////*****///////
+
+
 
 //Randomized Parameters
 int background;
 
 //Global Variables
+int fontSizeLimit;
+int typeYLimit;
+int yearSize;
 JSONArray results; 
 JSONObject response;
 String[] imgUrls;
 boolean go = true;
-int maxTIFs = 5;
-int TIFs = 0;
+int maxPNGs = 56;
+int PNGs = 0;
 String [] references = new String [numOfImages+1];
 int numOfReferences = 1;
 
-PImage template;
-PImage gradient;
 PImage[] img = new PImage[numOfImages];
 PFont f;
 PFont referenceFont;
 
 void setup() {
-  size(1306, 1160, JAVA2D);
+  size(3072, 2732, JAVA2D);
   book = new Book(this, JAVA2D);
 
   //Create array of entries from XLS sheet
   for (int i = 1; i < 57; i++) {
     entries[i] = new Entry(i);
   }
-
-   referenceFont = createFont("Oswald-Light", 12);
-
-  //setup template background
-  // gradient = loadImage("Gradient.png");
-  template = loadImage("template.png");  
-  image(template, 0, 0, width, height);
+   referenceFont = createFont(refFont, 18);
 
   //create imgUrls array
   imgUrls = new String[numOfImages];
@@ -55,23 +77,38 @@ void setup() {
 }
 
 void draw() {
-  //run process every 7 seconds (giving time to load)
-  if (second() % 7 == 0 && go) {
+  //run process every 5 seconds (giving time to load)
+  if (second() % 5 == 0 && go) {
     mainProcess();
     go = false;
   }
-  if (second() % 8 == 0) {
+  if (second() % 6 == 0) {
     go = true;
   }
 }
 
 void mainProcess() {
-  TIFs++;
+  PNGs++;
 
   //Right now pulling only form (present event)
-  int randomRow = floor(random(1,56));
-  int selectRow = randomRow;
-  String selectedEntry = entries[selectRow].presentEvent();
+  //int randomRow = floor(random(1,56));
+  
+  int selectRow = PNGs;
+  
+  String selectedEntry = "blank"; //wont run unless value is given
+  if(present){
+    selectedEntry = entries[selectRow].presentEvent();
+  }
+  if(future){
+    selectedEntry = entries[selectRow].futureEvent();
+  }
+  if(modal){
+    selectedEntry = entries[selectRow].modalEvent();
+  }
+  if(extended){
+    selectedEntry = entries[selectRow].getFullSentence();
+  }
+
   String selectedYear = entries[selectRow].yearOf();
   references[0] = entries[selectRow].reference();
   numOfReferences = 1;
@@ -80,21 +117,26 @@ void mainProcess() {
 
   //get and put images on page
   getImages(numOfImages, getTokens(selectedEntry));
-  
   SetYear(selectedYear);
   SetType(selectedEntry);
   addReference(references, numOfReferences);
   //output frame
-  saveFrame("output/frames####.tif");
+  saveFrame("output/frames####.png");
   book.clear();
   numOfReferences = 0;
-  if (TIFs == maxTIFs) {
+  if (PNGs == maxPNGs) {
     exit();
   }
 }
 
 void randPos(PImage img) {
-  image(img, floor(random(0, width)), floor(random(1, height)));
+  if(resizeImages){
+    float scalar = random(2,5);
+    println(scalar);
+    image(img, floor(random(0, width-(width/5))), floor(random(1, height-(height/5))),img.width, img.height );
+  }else{
+    image(img, floor(random(0, width-(width/5))), floor(random(1, height-(height/5))));
+  }
 }
 
 void randPosSize(PImage img) {
@@ -114,13 +156,17 @@ boolean coinFlip() {
 }
 
 void changeBackground() {
-  if (random(100)>50) {
+  float check = random(100);
+  if (check>60) {
     background = 0;
-  } else {
+  } else if (check>40){
     background = 255;
+  }else{
+    background(0,0,255);
+    return;
   }
   blendMode(BLEND);
-  background(background, 255);
+  background(background);
 }
 
 

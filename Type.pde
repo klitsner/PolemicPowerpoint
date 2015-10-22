@@ -1,23 +1,22 @@
 void setFont(int fontSize) {
   if (random(12)>3) {
     if (random(12)>6) {
-      f = createFont("Oswald-Bold", fontSize);
+      f = createFont(font3, fontSize);
     } else
-      f = createFont("Oswald-Light", fontSize);
+      f = createFont(font2, fontSize);
   } else {
-    f = createFont("Oswald-Light", fontSize);
+    f = createFont(font1, fontSize);
   }
 }
 
 void SetType(String text) {
   int charCount = text.length();
 
-
   //use character count to dictate max font size
-  int maxFontSize = floor(map(charCount, 20, 100, 200, 100));
-  int minFontSize = 80;
   int maxTextLines = 3;
 
+  int maxFontSize = fontSizeLimit;
+  int minFontSize = fontSizeLimit-150;
 
   int fontSize = floor(random(minFontSize, maxFontSize));
 
@@ -32,7 +31,7 @@ void SetType(String text) {
 
   //int maxY =  
   //int y = floor(random(0,maxY));
-  int y = floor(random(height/6+fontSize, height/2));
+  int y = floor(random(typeYLimit+yearSize, typeYLimit+height/3));
 
   int minLineLength = charCount/ maxTextLines;
   int maxLineLength = floor((width-x)/(charWidth*1.1));
@@ -40,20 +39,22 @@ void SetType(String text) {
   int lineLength = floor(random(minLineLength, maxLineLength));
   println(lineLength);
   int lineSpacing = floor(map(fontSize, minFontSize, maxFontSize, 0, -(fontSize/2)));
-
+  
   TextPlace(text, x, y, lineLength, lineSpacing);
 }
 
 void SetYear(String text) {
-  int charCount = text.length();
+  int charCount = text.length()+4;
 
   //use character count to dictate max font size
-  int maxFontSize = floor(map(charCount, 20, 100, 200, 100));
-  int minFontSize = 80;
+  int maxFontSize = floor(map(charCount, 10, 20, 400, 250));
+  int minFontSize = 250;
   int maxTextLines = 3;
 
   int fontSize = floor(random(minFontSize, maxFontSize));
 
+  fontSizeLimit = fontSize;
+  
   setFont(fontSize);
   textFont(f);
 
@@ -61,33 +62,45 @@ void SetYear(String text) {
   int textWidth = floor(textWidth(text));
 
   int maxX = (width-textWidth/3)-charWidth - 100;  
-  int x = floor(random(0, maxX));
+  int x = floor(random(20, min(maxX, width/2)));
 
-  int y = floor(random(height/6+fontSize, height/2));
+  int y = floor(random(height/5+fontSize, height/4));
+  yearSize = floor(textDescent()+textAscent());
+  println("yearSize: "+yearSize);
 
   int lineLength = floor((width-x)/(charWidth*1.1));
-  println(lineLength);
   int lineSpacing = floor(map(fontSize, minFontSize, maxFontSize, 0, -(fontSize/2)));
 
-  YearPlace(text, x, y, lineLength, lineSpacing);
+  YearPlace(text+" BCE", x, y, lineLength, lineSpacing);
+  
+  typeYLimit = floor(y-(textDescent()));
 }
 
 void TextPlace(String text, int x, int y, int lineLength, int lineSpacing) {
 
   book.setLineSpacing(lineSpacing);
-  color textFill = randomColor();
-  color recStroke = textFill;
+  
+  color textFill = textColor();
 
-  int margin = floor(textWidth("A")/2);
-  stroke(recStroke);
-  //try no fill
-  noFill();
-  int recWidth = floor(lineLength*textWidth("A")-margin);
-  int recHeight = lineSpacing*30;
-  rect(x-margin, y-margin*2, recWidth, 100);
+ 
+  
+  int textHeight = floor(0.8*(textAscent() + textDescent()));
+  
+  if(circlesAndSquares){
+  maybeRect(textFill, lineLength, lineSpacing, x, y, textHeight);
+  maybeEllipse(textFill, lineLength, lineSpacing, x, y, textHeight);
+  }
 
   fill(textFill);
+  if(blackWhiteOutline){
+    if(textFill==color(0,0,0)){
+      stroke(255,255,255);
+    }else{
+      stroke(0,0,0);
+    }
+  }else{
   stroke(randomColor());
+  }
 
   //create a rectangle
 
@@ -108,11 +121,25 @@ void YearPlace(String year, int x, int y, int lineLength, int lineSpacing) {
 
   book.setLineSpacing(lineSpacing);
 
-  fill(randomColor());
+  if(coinFlip()){
+    fill(textColor());
+  }else{
+    fill(255,0,0);
+  }
+  
+   color textFill = textColor();
+  
+  if(blackWhiteOutline){
+    if(textFill==color(0,0,0)){
+      stroke(255,0,0);
+    }else{
+      stroke(0,0,0);
+    }
+  }else{
   stroke(randomColor());
+  }
 
   randomTextAttributes(year);
-
 
   try {
     book.addText(year, x, y, lineLength);
@@ -131,16 +158,29 @@ void addReference(String [] reference, int number) {
     start = 0;
   }
   int i = start;
-  int y = height - (number * 10) - 20;
+  int y = height - (number * 18) - 30;
 
   textFont(referenceFont);
   colorMode(RGB);
   fill(255, 0, 0);
-  text("REFERENCES:", 10, y-18);
+  text("REFERENCES:", 18, y-18);
 
   while (reference[i] != null) {
-    text(reference[i], 10, y+(i*14));
+    text(reference[i], 18, y+(i*28));
     i++;
   }
 }
 
+color textColor(){
+  color textFill = color(0,0,255);
+    if(blackWhiteText){
+    if(background==255 && textOutline || background == 0){
+      textFill = color(255,255,255);
+    }else if(background == 255 || background == 0 && textOutline){
+      textFill = color(0,0,0);
+    }
+  }else{
+  textFill = randomColor();
+  }
+  return textFill;
+}
