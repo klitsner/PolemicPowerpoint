@@ -48,7 +48,7 @@ JSONArray results;
 JSONObject response;
 boolean go = true;
 int maxPNGs = 56;
-int pngs = 32;
+int pngs = 0;
 String [] references = new String [numOfImages+3];
 int numOfReferences = 0;
 
@@ -126,7 +126,7 @@ void mainProcess() {
   addReference(references, numOfReferences);
   //output frame
    wait(2000);
-  saveFrame("output/"+modal+"/frames####.png");
+  saveFrame("output/"+modal+"2/frames####.png");
   book.clear();
   numOfReferences = 0;
   if (pngs == maxPNGs) {

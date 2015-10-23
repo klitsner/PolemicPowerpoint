@@ -52,6 +52,7 @@ String getImgUrl(String search) {
   catch(Exception e) {
     String responseDetails = response.getString("responseDetails");
     e.printStackTrace();
+    wait(610000);
     return null;
   }
   results = response.getJSONArray("results");
