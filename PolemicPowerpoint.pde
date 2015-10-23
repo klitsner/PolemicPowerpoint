@@ -4,7 +4,7 @@ import net.nexttext.*;
 import net.nexttext.renderer.*;
 
 Book book;
-Entry[] entries = new Entry[57];
+Entry[] entries = new Entry[58];
 
 /////*****Adjustable Parameters*****///////
 
