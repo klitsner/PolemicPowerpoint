@@ -9,9 +9,9 @@ Entry[] entries = new Entry[57];
 /////*****Adjustable Parameters*****///////
 
 //EntryType
-boolean present = true;
+boolean present = false;
 boolean future = false;
-boolean modal = false;
+boolean modal = true;
 boolean extended = false; // may be too much text
 
 //Image
@@ -48,7 +48,7 @@ JSONArray results;
 JSONObject response;
 boolean go = true;
 int maxPNGs = 56;
-int pngs = 0;
+int pngs = 32;
 String [] references = new String [numOfImages+3];
 int numOfReferences = 0;
 
@@ -126,7 +126,7 @@ void mainProcess() {
   addReference(references, numOfReferences);
   //output frame
    wait(2000);
-  saveFrame("output/frames####.png");
+  saveFrame("output/"+modal+"/frames####.png");
   book.clear();
   numOfReferences = 0;
   if (pngs == maxPNGs) {
