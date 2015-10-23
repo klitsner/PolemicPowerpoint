@@ -27,7 +27,7 @@ void SetType(String text) {
   int textWidth = floor(textWidth(text));
 
   int maxX = (width-textWidth/3)-charWidth;  
-  int x = floor(width - textWidth("A")*text.length()/3);//floor(random(0, maxX));
+  int x = max(100,floor(width - textWidth("A")*text.length()/3));
 
   //int maxY =  
   //int y = floor(random(0,maxY));
@@ -148,6 +148,11 @@ void YearPlace(String year, int x, int y, int lineLength, int lineSpacing) {
 
 void addReference(String [] reference, int number) {
   int start;
+  
+  if (reference[0] == null && reference[1] == null){
+    return;
+  }
+  
   if (reference[0] == null) {
     start = 1;
   } else {

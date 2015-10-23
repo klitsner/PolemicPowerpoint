@@ -6,23 +6,24 @@ String randomImageSize() {
 }
 
 void getImages(int numOfImages, String[] terms) {
-  
-  for(int i = 0; i<img.length; i++){
-   img[i] = null; 
+
+  for (int i = 0; i<img.length; i++) {
+    img[i] = null;
   }
   
   //The number of images is limited to the number of significant terms (nouns, verbs) found in entry, even if numOfImages is higher
   if (numOfImages>terms.length) {
-    for (int i = 0; i<terms.length; i++) {
+    numOfImages = terms.length;
+  }
+    for (int i = 0; i<numOfImages; i++) {
       imageCreate(i, terms[i]);
     }
-  } 
-  for (int i = 0; i < numOfImages; i++) {
-    if (img[i] != null) {
-      randPos(img[i]);
+    for (int i = 0; i < numOfImages; i++) {
+      if (img[i] != null) {
+        randPos(img[i]);
+      }
     }
   }
-}
 
 void imageCreate(int index, String searchTerm) {
   //pauses 
@@ -30,7 +31,8 @@ void imageCreate(int index, String searchTerm) {
   String url = getImgUrl(searchTerm);
   if (url != null) {
     img[index] = loadImage(getImgUrl(searchTerm), "jpg");
-    references[index+1]=url;
+    wait(50);
+    references[numOfReferences]=url;
     numOfReferences++;
   } else {
     imageCreate(index, searchTerm); // coment out if running slowly
@@ -40,7 +42,7 @@ void imageCreate(int index, String searchTerm) {
 
 String getImgUrl(String search) {
   String url;
-  int randomSelect = floor(random(1, 30));
+  int randomSelect = int(random(4));
 
   url = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q="+search+ "&start="+(randomSelect)+"&as_filetype=jpg"+"&imgsz="+randomImageSize()+"";
   response = loadJSONObject(url);

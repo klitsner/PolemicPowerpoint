@@ -47,10 +47,10 @@ int yearSize;
 JSONArray results; 
 JSONObject response;
 boolean go = true;
-int maxPNGs = 57;
+int maxPNGs = 56;
 int pngs = 0;
-String [] references = new String [numOfImages+1];
-int numOfReferences = 1;
+String [] references = new String [numOfImages+3];
+int numOfReferences = 0;
 
 PImage[] img = new PImage[numOfImages];
 PFont f;
@@ -72,11 +72,11 @@ void setup() {
 
 void draw() {
   //run process every 5 seconds (giving time to load)
-  if (second() % 5 == 0 && go) {
+  if (second() % 6 == 0 && go) {
     mainProcess();
     go = false;
   }
-  if (second() % 6 == 0) {
+  if (second() % 7 == 0) {
     go = true;
   }
 }
@@ -104,7 +104,11 @@ void mainProcess() {
 
   String selectedYear = entries[selectRow].yearOf();
   references[0] = entries[selectRow].reference();
+  if(references[0]!=null){
   numOfReferences = 1;
+  }else{
+   numOfReferences = 0;
+  }
   
   changeBackground();
 
@@ -132,14 +136,27 @@ void mainProcess() {
 }
 
 void randPos(PImage img) {
+  
+    int y;
+    int x;
+    if(random(10)<3){
+      y = int(random(0,200));
+      x = int(random(0,200));
+    }else{
+      x = int(random(0, width-(width/5)));
+      y = int(random(1, height-(height/3)));
+    }
+  
+  
   if(resizeImages){
-    float scalar = random(2,5);
+    float scalar = random(2,4);
     println(scalar);
-    image(img, floor(random(0, width-(width/5))), floor(random(1, height-(height/3))),img.width*scalar, img.height*scalar );
+    image(img, x, y,img.width*scalar, img.height*scalar );
   }else{
-    image(img, floor(random(0, width-(width/5))), floor(random(1, height-(height/3))));
+    image(img, x, y);
   }
 }
+
 
 void randPosSize(PImage img) {
   image(img, floor(random(0, width)), floor(random(1, height)), floor(random(1, width)), floor(random(1, height)));
