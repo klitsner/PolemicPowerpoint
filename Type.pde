@@ -59,7 +59,7 @@ void SetYear(String text) {
   int textWidth = floor(textWidth(text));
 
   int maxX = (width-textWidth/3)-charWidth - 100;  
-  int x = floor(random(20, min(maxX, width/2)));
+  int x = floor(random(20, min(maxX, width/2)-200));
 
   int y = floor(random(height/5+fontSize, height/4));
   yearSize = floor(textDescent()+textAscent());
@@ -78,8 +78,6 @@ void TextPlace(String text, int x, int y, int lineLength, int lineSpacing) {
   book.setLineSpacing(lineSpacing);
 
   color textFill = textColor();
-
-
 
   int textHeight = floor(0.8*(textAscent() + textDescent()));
 
@@ -109,8 +107,6 @@ void TextPlace(String text, int x, int y, int lineLength, int lineSpacing) {
   catch(Exception e) {
     book.addText(text, x, y, lineLength+2);
   }
-
-  //draws text to page
 }
 
 void YearPlace(String year, int x, int y, int lineLength, int lineSpacing) {

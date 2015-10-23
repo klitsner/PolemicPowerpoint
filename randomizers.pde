@@ -6,7 +6,7 @@ color randomColor() {
 
 
 void outlineText() {
-  strokeWeight(floor(random(4, 12)));
+  strokeWeight(floor(random(8, 16)));
 }
 
 void randomBlendMode() {

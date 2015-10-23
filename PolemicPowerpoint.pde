@@ -9,9 +9,9 @@ Entry[] entries = new Entry[58];
 /////*****Adjustable Parameters*****///////
 
 //EntryType
-boolean present = true;
+boolean present = false;
 boolean future = false;
-boolean modal = false;
+boolean modal = true;
 boolean extended = false; // may be too much text
 
 //Image
@@ -126,7 +126,7 @@ void mainProcess() {
   addReference(references, numOfReferences);
   //output frame
    wait(2000);
-  saveFrame("output/frames####.png");
+  saveFrame("output/"+modal+"2/frames####.png");
   book.clear();
   numOfReferences = 0;
   if (pngs == maxPNGs) {
