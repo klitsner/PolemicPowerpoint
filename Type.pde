@@ -58,7 +58,7 @@ void SetYear(String text) {
   int charWidth = floor(textWidth("a"));
   int textWidth = floor(textWidth(text));
 
-  int maxX = (width-textWidth/3)-charWidth - 100;  
+  int maxX = (width-textWidth+/3)-charWidth - 100;  
   int x = floor(random(20, min(maxX, width/2)-200));
 
   int y = floor(random(height/5+fontSize, height/4));
@@ -68,7 +68,7 @@ void SetYear(String text) {
   int lineLength = floor((width-x)/(charWidth*1.1));
   int lineSpacing = floor(map(fontSize, minFontSize, maxFontSize, 0, -(fontSize/2)));
 
-  YearPlace(text+" BCE", x, y, lineLength, lineSpacing);
+  YearPlace("IN " + text + " YEARS", x, y, lineLength, lineSpacing);
 
   typeYLimit = floor(y-(textDescent()));
 }
