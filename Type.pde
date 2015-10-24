@@ -89,9 +89,9 @@ void TextPlace(String text, int x, int y, int lineLength, int lineSpacing) {
   fill(textFill);
   if (blackWhiteOutline) {
     if (textFill==color(0, 0, 0)) {
-      stroke(255, 255, 255);
+      stroke(255, 0, 0);
     } else {
-      stroke(0, 0, 0);
+      stroke(255, 0, 0);
     }
   } else {
     stroke(randomColor());
